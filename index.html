@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>어디로 갈까?</title>
+  <title>어디로 갈까? - 일본 여행 편</title>
   <style>
     /* ===== Reset & Base ===== */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -22,45 +22,88 @@
     /* ===== Header ===== */
     header {
       width: 100%;
-      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      background: linear-gradient(-45deg, #6c5ce7, #a29bfe, #fd79a8, #e17055, #6c5ce7);
+      background-size: 300% 300%;
+      animation: gradientShift 8s ease infinite;
       color: #fff;
       text-align: center;
-      padding: 2rem 1rem 1.6rem;
+      padding: 2.5rem 1rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     header h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
+      font-size: 2rem;
+      font-weight: 800;
       letter-spacing: -0.02em;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
     header p {
-      margin-top: 0.4rem;
-      font-size: 0.95rem;
-      opacity: 0.85;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      opacity: 0.9;
     }
 
     /* ===== Main Container ===== */
     .container {
       width: 100%;
-      max-width: 520px;
+      max-width: 560px;
       padding: 1.5rem 1rem 3rem;
+    }
+
+    /* ===== Section Card ===== */
+    .section-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .section-card:nth-child(1) { animation-delay: 0.1s; }
+    .section-card:nth-child(2) { animation-delay: 0.25s; }
+    .section-card:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-card h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #333;
     }
 
     /* ===== Vote Cards ===== */
     .vote-card {
       background: #fff;
+      border: 2px solid #eee;
       border-radius: 14px;
       padding: 1.2rem 1.4rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
       cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.3s ease;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      position: relative;
     }
 
     .vote-card:hover {
@@ -73,7 +116,27 @@
     }
 
     .vote-card.voted {
-      border: 2px solid #6c5ce7;
+      border: 2px solid transparent;
+      background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #6c5ce7, #fd79a8);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+    }
+
+    .vote-card.voted::after {
+      content: '\2713';
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #6c5ce7;
+      background: #f0eeff;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .vote-card .info {
@@ -107,18 +170,16 @@
       text-align: right;
     }
 
-    /* ===== Bar Chart Section ===== */
-    .results-section {
-      margin-top: 1.2rem;
+    /* ===== Revote hint ===== */
+    .revote-hint {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #999;
+      margin-top: 0.2rem;
+      margin-bottom: 0.5rem;
     }
 
-    .results-section h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: #333;
-    }
-
+    /* ===== Bar Chart ===== */
     .bar-row {
       display: flex;
       align-items: center;
@@ -159,24 +220,148 @@
       flex-shrink: 0;
     }
 
-    /* ===== Already-voted message ===== */
-    .voted-message {
-      text-align: center;
-      padding: 1rem;
-      background: #e8f5e9;
-      border-radius: 12px;
-      color: #2e7d32;
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
-    }
-
-    /* ===== Total ===== */
     .total {
       text-align: center;
       margin-top: 0.6rem;
       font-size: 0.9rem;
       color: #888;
+    }
+
+    /* ===== Month Vote Section ===== */
+    .month-vote-row {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .month-vote-row select {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .month-vote-row select:focus {
+      outline: none;
+      border-color: #6c5ce7;
+    }
+
+    .btn-vote {
+      padding: 0.7rem 1.4rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+
+    .btn-vote:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(108, 92, 231, 0.35);
+    }
+
+    .btn-vote:active {
+      transform: scale(0.97);
+    }
+
+    .month-bar-fill {
+      height: 100%;
+      border-radius: 13px;
+      background: linear-gradient(90deg, #e17055, #fdcb6e);
+      transition: width 0.5s ease;
+      min-width: 0;
+    }
+
+    /* ===== Comments Section ===== */
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .comment-form input,
+    .comment-form textarea {
+      padding: 0.7rem 1rem;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: #fff;
+      color: #333;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+
+    .comment-form input:focus,
+    .comment-form textarea:focus {
+      outline: none;
+      border-color: #6c5ce7;
+    }
+
+    .comment-form textarea {
+      min-height: 70px;
+    }
+
+    .comment-form .btn-vote {
+      align-self: flex-end;
+    }
+
+    .comment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .comment-item {
+      background: #f8f8fc;
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.35rem;
+    }
+
+    .comment-nickname {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #6c5ce7;
+    }
+
+    .comment-time {
+      font-size: 0.75rem;
+      color: #aaa;
+    }
+
+    .comment-text {
+      font-size: 0.9rem;
+      color: #444;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .no-comments {
+      text-align: center;
+      color: #bbb;
+      font-size: 0.9rem;
+      padding: 1rem 0;
     }
 
     /* ===== Loading Spinner ===== */
@@ -214,103 +399,174 @@
 
     /* ===== Responsive ===== */
     @media (max-width: 400px) {
-      header h1 { font-size: 1.4rem; }
+      header h1 { font-size: 1.5rem; }
+      .section-card { padding: 1.1rem; }
       .vote-card { padding: 1rem; }
       .bar-label { width: 60px; font-size: 0.78rem; }
+      .month-vote-row { flex-direction: column; }
+      .month-vote-row select { width: 100%; }
+      .btn-vote { width: 100%; text-align: center; }
+      .comment-form .btn-vote { align-self: stretch; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>어디로 갈까?</h1>
+    <h1>✈️ 어디로 갈까? - 일본 여행 편</h1>
     <p>가고 싶은 여행지에 투표하세요!</p>
   </header>
 
   <div class="container">
-    <!-- 투표 카드 영역 -->
-    <div id="vote-cards">
-      <div class="loading">투표 항목을 불러오는 중</div>
+    <!-- 섹션 1: 여행지 투표 -->
+    <div class="section-card">
+      <h2>🗾 여행지 투표</h2>
+      <div id="vote-cards">
+        <div class="loading">투표 항목을 불러오는 중</div>
+      </div>
+      <div id="results-section" style="display:none;">
+        <div id="bar-chart"></div>
+        <p class="total" id="total-count"></p>
+      </div>
     </div>
 
-    <!-- 결과 그래프 영역 -->
-    <div class="results-section" id="results-section" style="display:none;">
-      <h2>현재 투표 현황</h2>
-      <div id="bar-chart"></div>
-      <p class="total" id="total-count"></p>
+    <!-- 섹션 2: 여행 월 투표 -->
+    <div class="section-card">
+      <h2>📅 여행 월 투표</h2>
+      <div class="month-vote-row">
+        <select id="month-select">
+          <option value="">-- 월을 선택하세요 --</option>
+          <option value="1">1월</option>
+          <option value="2">2월</option>
+          <option value="3">3월</option>
+          <option value="4">4월</option>
+          <option value="5">5월</option>
+          <option value="6">6월</option>
+          <option value="7">7월</option>
+          <option value="8">8월</option>
+          <option value="9">9월</option>
+          <option value="10">10월</option>
+          <option value="11">11월</option>
+          <option value="12">12월</option>
+        </select>
+        <button class="btn-vote" id="month-vote-btn">투표</button>
+      </div>
+      <div id="month-revote-hint" class="revote-hint" style="display:none;"></div>
+      <div id="month-results" style="display:none;">
+        <div id="month-bar-chart"></div>
+        <p class="total" id="month-total-count"></p>
+      </div>
+    </div>
+
+    <!-- 섹션 3: 댓글 -->
+    <div class="section-card">
+      <h2>💬 댓글</h2>
+      <div class="comment-form">
+        <input type="text" id="comment-nickname" placeholder="닉네임" maxlength="20" />
+        <textarea id="comment-text" placeholder="댓글을 입력하세요..." maxlength="500"></textarea>
+        <button class="btn-vote" id="comment-submit-btn">작성</button>
+      </div>
+      <div class="comment-list" id="comment-list">
+        <div class="no-comments">아직 댓글이 없습니다.</div>
+      </div>
     </div>
   </div>
 
   <footer>Where Should We Go? &copy; 2025</footer>
 
-  <!-- ============================================================
-       Firebase SDK (v9 compat CDN)
-       ============================================================ -->
+  <!-- Firebase SDK (v9 compat CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
     // =============================================================
-    // [Firebase 설정] 아래 firebaseConfig 객체에 본인의 Firebase
-    // 프로젝트 설정 값을 입력하세요.
-    // Firebase 콘솔 > 프로젝트 설정 > 내 앱 에서 확인할 수 있습니다.
+    // Firebase 설정
     // =============================================================
     const firebaseConfig = {
-        apiKey: "AIzaSyC0QZqNQvsm7PvKN18eQ-LiaFLEz2O9wKs",
-        authDomain: "travel-2d6c4.firebaseapp.com",
-        projectId: "travel-2d6c4",
-        storageBucket: "travel-2d6c4.firebasestorage.app",
-        messagingSenderId: "120688909445",
-        appId: "1:120688909445:web:b85ef3535a99912fc49dec"
+      apiKey: "AIzaSyC0QZqNQvsm7PvKN18eQ-LiaFLEz2O9wKs",
+      authDomain: "travel-2d6c4.firebaseapp.com",
+      projectId: "travel-2d6c4",
+      storageBucket: "travel-2d6c4.firebasestorage.app",
+      messagingSenderId: "120688909445",
+      appId: "1:120688909445:web:b85ef3535a99912fc49dec"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     // =============================================================
-    // 투표 항목 정의 (이름, 아이콘, Firestore 문서 ID)
-    // 원하는 대로 항목을 추가/수정할 수 있습니다.
+    // 여행지 투표 항목 (일본)
     // =============================================================
     const VOTE_ITEMS = [
-      { id: "jeju",    name: "제주도",   icon: "🏝️" },
-      { id: "busan",   name: "부산",     icon: "🌊" },
-      { id: "gangwon", name: "강원도",   icon: "⛰️" },
-      { id: "jeonju",  name: "전주",     icon: "🏯" },
+      { id: "tokyo",    name: "도쿄",     icon: "🗼" },
+      { id: "osaka",    name: "오사카",   icon: "🏯" },
+      { id: "fukuoka",  name: "후쿠오카", icon: "♨️" },
+      { id: "okinawa",  name: "오키나와", icon: "🏖️" },
     ];
 
-    const COLLECTION  = "votes";         // Firestore 컬렉션 이름
-    const LS_KEY      = "voted_item";    // localStorage 키
+    const VOTES_COL       = "votes";
+    const MONTH_VOTES_COL = "monthVotes";
+    const COMMENTS_COL    = "comments";
+    const LS_VOTE_KEY     = "voted_item";
+    const LS_MONTH_KEY    = "voted_month";
 
     // ----- DOM References -----
-    const cardsEl     = document.getElementById("vote-cards");
-    const resultsEl   = document.getElementById("results-section");
-    const barChartEl  = document.getElementById("bar-chart");
-    const totalEl     = document.getElementById("total-count");
+    const cardsEl         = document.getElementById("vote-cards");
+    const resultsEl       = document.getElementById("results-section");
+    const barChartEl      = document.getElementById("bar-chart");
+    const totalEl         = document.getElementById("total-count");
+    const monthSelect     = document.getElementById("month-select");
+    const monthVoteBtn    = document.getElementById("month-vote-btn");
+    const monthRevoteHint = document.getElementById("month-revote-hint");
+    const monthResultsEl  = document.getElementById("month-results");
+    const monthBarChartEl = document.getElementById("month-bar-chart");
+    const monthTotalEl    = document.getElementById("month-total-count");
+    const commentNickEl   = document.getElementById("comment-nickname");
+    const commentTextEl   = document.getElementById("comment-text");
+    const commentSubmitEl = document.getElementById("comment-submit-btn");
+    const commentListEl   = document.getElementById("comment-list");
 
     // ----- State -----
-    let votedId = localStorage.getItem(LS_KEY);   // 이미 투표한 항목 ID (없으면 null)
-    let voteCounts = {};  // { itemId: number }
+    let votedId     = localStorage.getItem(LS_VOTE_KEY);
+    let votedMonth  = localStorage.getItem(LS_MONTH_KEY);
+    let voteCounts  = {};
+    let monthCounts = {};
 
     // =============================================================
-    // Firestore 초기 문서 생성 (없으면 count: 0 으로 자동 생성)
+    // Firestore 초기 문서 생성
     // =============================================================
     async function ensureDocuments() {
       const batch = db.batch();
+      let needCommit = false;
+
+      // 여행지 투표 문서
       for (const item of VOTE_ITEMS) {
-        const ref = db.collection(COLLECTION).doc(item.id);
+        const ref = db.collection(VOTES_COL).doc(item.id);
         const doc = await ref.get();
         if (!doc.exists) {
           batch.set(ref, { count: 0 });
+          needCommit = true;
         }
       }
-      await batch.commit();
+
+      // 월 투표 문서
+      for (let m = 1; m <= 12; m++) {
+        const ref = db.collection(MONTH_VOTES_COL).doc("month_" + m);
+        const doc = await ref.get();
+        if (!doc.exists) {
+          batch.set(ref, { count: 0 });
+          needCommit = true;
+        }
+      }
+
+      if (needCommit) await batch.commit();
     }
 
     // =============================================================
-    // 실시간 리스너 (onSnapshot)
+    // 여행지 투표 - 실시간 리스너
     // =============================================================
     function listenToVotes() {
-      db.collection(COLLECTION).onSnapshot((snapshot) => {
+      db.collection(VOTES_COL).onSnapshot((snapshot) => {
         snapshot.forEach((doc) => {
           voteCounts[doc.id] = doc.data().count || 0;
         });
@@ -320,64 +576,67 @@
     }
 
     // =============================================================
-    // 투표 처리
+    // 여행지 투표 처리 (재투표 지원)
     // =============================================================
     async function castVote(itemId) {
-      if (votedId) return; // 이미 투표함
+      if (votedId === itemId) return; // 같은 항목 클릭 시 무시
 
-      const ref = db.collection(COLLECTION).doc(itemId);
-      await ref.update({
-        count: firebase.firestore.FieldValue.increment(1),
-      });
+      if (votedId) {
+        // 재투표: batch로 이전 -1, 새 +1
+        const batch = db.batch();
+        const oldRef = db.collection(VOTES_COL).doc(votedId);
+        const newRef = db.collection(VOTES_COL).doc(itemId);
+        batch.update(oldRef, { count: firebase.firestore.FieldValue.increment(-1) });
+        batch.update(newRef, { count: firebase.firestore.FieldValue.increment(1) });
+        await batch.commit();
+      } else {
+        // 최초 투표
+        const ref = db.collection(VOTES_COL).doc(itemId);
+        await ref.update({ count: firebase.firestore.FieldValue.increment(1) });
+      }
 
       votedId = itemId;
-      localStorage.setItem(LS_KEY, itemId);
+      localStorage.setItem(LS_VOTE_KEY, itemId);
       renderCards();
     }
 
     // =============================================================
-    // 카드 렌더링
+    // 여행지 카드 렌더링
     // =============================================================
     function renderCards() {
       cardsEl.innerHTML = "";
-
-      if (votedId) {
-        const msg = document.createElement("div");
-        msg.className = "voted-message";
-        msg.textContent = "투표해 주셔서 감사합니다!";
-        cardsEl.appendChild(msg);
-      }
 
       for (const item of VOTE_ITEMS) {
         const card = document.createElement("div");
         card.className = "vote-card" + (votedId === item.id ? " voted" : "");
 
-        card.innerHTML = `
-          <div class="info">
-            <div class="icon">${item.icon}</div>
-            <div class="name">${item.name}</div>
-          </div>
-          <div class="count">${voteCounts[item.id] ?? 0}</div>
-        `;
+        card.innerHTML =
+          '<div class="info">' +
+            '<div class="icon">' + item.icon + '</div>' +
+            '<div class="name">' + item.name + '</div>' +
+          '</div>' +
+          '<div class="count">' + (voteCounts[item.id] ?? 0) + '</div>';
 
-        if (!votedId) {
-          card.addEventListener("click", () => castVote(item.id));
-        } else {
-          card.style.cursor = "default";
-        }
-
+        card.addEventListener("click", () => castVote(item.id));
         cardsEl.appendChild(card);
+      }
+
+      if (votedId) {
+        const hint = document.createElement("div");
+        hint.className = "revote-hint";
+        hint.textContent = "다른 항목을 클릭하면 재투표할 수 있습니다";
+        cardsEl.appendChild(hint);
       }
     }
 
     // =============================================================
-    // 막대 그래프 렌더링
+    // 여행지 막대 그래프
     // =============================================================
     function renderChart() {
       resultsEl.style.display = "block";
 
       const total = VOTE_ITEMS.reduce((s, i) => s + (voteCounts[i.id] || 0), 0);
-      totalEl.textContent = `총 ${total}표`;
+      totalEl.textContent = "총 " + total + "표";
 
       barChartEl.innerHTML = "";
 
@@ -387,24 +646,186 @@
 
         const row = document.createElement("div");
         row.className = "bar-row";
-        row.innerHTML = `
-          <div class="bar-label">${item.icon} ${item.name}</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width: ${percent}%"></div>
-          </div>
-          <div class="bar-percent">${percent}%</div>
-        `;
+        row.innerHTML =
+          '<div class="bar-label">' + item.icon + ' ' + item.name + '</div>' +
+          '<div class="bar-track">' +
+            '<div class="bar-fill" style="width: ' + percent + '%"></div>' +
+          '</div>' +
+          '<div class="bar-percent">' + percent + '%</div>';
         barChartEl.appendChild(row);
       }
     }
 
     // =============================================================
+    // 월 투표 - 실시간 리스너
+    // =============================================================
+    function listenToMonthVotes() {
+      db.collection(MONTH_VOTES_COL).onSnapshot((snapshot) => {
+        snapshot.forEach((doc) => {
+          monthCounts[doc.id] = doc.data().count || 0;
+        });
+        renderMonthChart();
+      });
+    }
+
+    // =============================================================
+    // 월 투표 처리 (재투표 지원)
+    // =============================================================
+    async function castMonthVote() {
+      const selected = monthSelect.value;
+      if (!selected) return;
+
+      const newDocId = "month_" + selected;
+      if (votedMonth === newDocId) return; // 같은 월 클릭 시 무시
+
+      if (votedMonth) {
+        // 재투표
+        const batch = db.batch();
+        const oldRef = db.collection(MONTH_VOTES_COL).doc(votedMonth);
+        const newRef = db.collection(MONTH_VOTES_COL).doc(newDocId);
+        batch.update(oldRef, { count: firebase.firestore.FieldValue.increment(-1) });
+        batch.update(newRef, { count: firebase.firestore.FieldValue.increment(1) });
+        await batch.commit();
+      } else {
+        const ref = db.collection(MONTH_VOTES_COL).doc(newDocId);
+        await ref.update({ count: firebase.firestore.FieldValue.increment(1) });
+      }
+
+      votedMonth = newDocId;
+      localStorage.setItem(LS_MONTH_KEY, newDocId);
+      updateMonthHint();
+    }
+
+    function updateMonthHint() {
+      if (votedMonth) {
+        const m = votedMonth.replace("month_", "");
+        monthRevoteHint.textContent = m + "월에 투표했습니다. 다시 선택하면 변경됩니다.";
+        monthRevoteHint.style.display = "block";
+      } else {
+        monthRevoteHint.style.display = "none";
+      }
+    }
+
+    // =============================================================
+    // 월 막대 그래프
+    // =============================================================
+    function renderMonthChart() {
+      monthResultsEl.style.display = "block";
+
+      let total = 0;
+      for (let m = 1; m <= 12; m++) {
+        total += monthCounts["month_" + m] || 0;
+      }
+      monthTotalEl.textContent = "총 " + total + "표";
+
+      monthBarChartEl.innerHTML = "";
+
+      for (let m = 1; m <= 12; m++) {
+        const docId   = "month_" + m;
+        const count   = monthCounts[docId] || 0;
+        const percent = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        row.innerHTML =
+          '<div class="bar-label">' + m + '월</div>' +
+          '<div class="bar-track">' +
+            '<div class="month-bar-fill" style="width: ' + percent + '%"></div>' +
+          '</div>' +
+          '<div class="bar-percent">' + percent + '%</div>';
+        monthBarChartEl.appendChild(row);
+      }
+    }
+
+    // =============================================================
+    // 댓글 - 실시간 리스너
+    // =============================================================
+    function listenToComments() {
+      db.collection(COMMENTS_COL)
+        .orderBy("createdAt", "desc")
+        .onSnapshot((snapshot) => {
+          commentListEl.innerHTML = "";
+
+          if (snapshot.empty) {
+            commentListEl.innerHTML = '<div class="no-comments">아직 댓글이 없습니다.</div>';
+            return;
+          }
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            const item = document.createElement("div");
+            item.className = "comment-item";
+
+            let timeStr = "";
+            if (data.createdAt) {
+              const d = data.createdAt.toDate();
+              timeStr = d.getFullYear() + "." +
+                String(d.getMonth() + 1).padStart(2, "0") + "." +
+                String(d.getDate()).padStart(2, "0") + " " +
+                String(d.getHours()).padStart(2, "0") + ":" +
+                String(d.getMinutes()).padStart(2, "0");
+            }
+
+            const safeNickname = escapeHtml(data.nickname || "익명");
+            const safeText = escapeHtml(data.text || "");
+
+            item.innerHTML =
+              '<div class="comment-header">' +
+                '<span class="comment-nickname">' + safeNickname + '</span>' +
+                '<span class="comment-time">' + timeStr + '</span>' +
+              '</div>' +
+              '<div class="comment-text">' + safeText + '</div>';
+
+            commentListEl.appendChild(item);
+          });
+        });
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    // =============================================================
+    // 댓글 작성
+    // =============================================================
+    async function submitComment() {
+      const nickname = commentNickEl.value.trim();
+      const text     = commentTextEl.value.trim();
+
+      if (!nickname) { commentNickEl.focus(); return; }
+      if (!text)     { commentTextEl.focus(); return; }
+
+      commentSubmitEl.disabled = true;
+
+      await db.collection(COMMENTS_COL).add({
+        nickname: nickname,
+        text: text,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      commentTextEl.value = "";
+      commentSubmitEl.disabled = false;
+    }
+
+    // =============================================================
+    // 이벤트 바인딩
+    // =============================================================
+    monthVoteBtn.addEventListener("click", castMonthVote);
+    commentSubmitEl.addEventListener("click", submitComment);
+
+    // =============================================================
     // 초기화
     // =============================================================
+    updateMonthHint();
+
     (async function init() {
       try {
         await ensureDocuments();
         listenToVotes();
+        listenToMonthVotes();
+        listenToComments();
       } catch (err) {
         cardsEl.innerHTML =
           '<p style="color:#e74c3c;text-align:center;padding:2rem;">' +
